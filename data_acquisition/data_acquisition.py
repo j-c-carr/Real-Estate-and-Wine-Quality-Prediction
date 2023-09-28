@@ -38,15 +38,3 @@ def fetch_wine_dataset(preprocess=True):
         wine_df.dropna(inplace=True)
 
     return wine_df
-
-
-def housing_tt_split(df, test_size=0.25):
-    # train test split for housing df
-
-    df['train'] = np.random.binomial(1, 1 - test_size, size=(df.shape[0], 1)).astype(bool)
-
-    X_train = df[df.train == True].drop(['MEDV', 'train'], axis=1).to_numpy()
-    X_test = df[df.train == False].drop(['MEDV', 'train'], axis=1).to_numpy()
-    y_train = df[df.train == True].MEDV.to_numpy().reshape(-1, 1)
-    y_test = df[df.train == False].MEDV.to_numpy().reshape(-1, 1)
-    return X_train, X_test, y_train, y_test

@@ -50,9 +50,9 @@ class LinearRegression:
             assert optimizer_class is not None
             self.w = np.zeros((A.shape[1], y.shape[1]))
             optimizer = optimizer_class(**optimizer_kwargs)
-            self.w = optimizer.run(self.gradient, A, y, self.w)
+            self.w, w_history = optimizer.run(self.gradient, A, y, self.w)
 
-        return self
+        return w_history
 
     def predict(self, X):
         assert self.w is not None
@@ -102,9 +102,9 @@ class LogisticRegression:
 
         self.w = np.zeros((A.shape[1], y.shape[1]))
         optimizer = optimizer_class(**optimizer_kwargs)
-        self.w = optimizer.run(self.gradient, A, y, self.w)
+        self.w, w_history = optimizer.run(self.gradient, A, y, self.w)
 
-        return self
+        return w_history
 
     def predict(self, X):
         A = np.copy(X)

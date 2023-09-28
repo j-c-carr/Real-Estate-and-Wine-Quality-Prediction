@@ -13,13 +13,12 @@ class StochasticGradientDescent:
                  beta=0):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
-        self.record_history = record_history
         self.epsilon = epsilon
         self.verbose = verbose
         self.batch_size = batch_size
         self.beta = beta    # momentum
-        if record_history:
-            self.w_history = []  # to store the weight history for visualization
+        self.w_history = []  # to store the weight history for visualization
+        self.record_history = record_history
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
@@ -47,7 +46,7 @@ class StochasticGradientDescent:
             if self.record_history:
                 self.w_history.append(w)
             t += 1
-        return w
+        return w, self.w_history
 
 
 class Adam:
@@ -60,14 +59,13 @@ class Adam:
                  beta_1=0.9, beta_2=0.9):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
-        self.record_history = record_history
         self.epsilon = epsilon
         self.verbose = verbose
         self.batch_size = batch_size
+        self.w_history = []  # to store the weight history for visualization
+        self.record_history = record_history
         self.beta_1 = beta_1    # used for moving average of the first moment
         self.beta_2 = beta_2    # used for moving average of the second moment
-        if record_history:
-            self.w_history = []  # to store the weight history for visualization
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
@@ -106,4 +104,4 @@ class Adam:
                 self.w_history.append(w)
 
             t += 1
-        return w
+        return w, self.w_history

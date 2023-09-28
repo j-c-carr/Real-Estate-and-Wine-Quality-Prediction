@@ -1,6 +1,4 @@
 import numpy as np
-from models.optimizers import StochasticGradientDescent, Adam
-
 
 class LinearRegression:
     def __init__(self, add_bias=True):
@@ -8,18 +6,26 @@ class LinearRegression:
         self.w = None
 
     def cost_fn(self, X, y, w):
+        """Computes the sum of square loss as defined in slide 15 of:
+        https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/3-linearregression.pdf"""
         cost = 0.5 * np.sum((y - np.dot(X, w))**2)
         return cost
 
     def gradient(self, X, y, w):
-
+        """Computes the gradient of the sum of squares loss as defined in slide 19 of:
+         https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
+         """
         y_hat = np.dot(X, w)
         grad = np.dot(X.transpose(), y_hat - y) / X.shape[0]
 
         return grad
 
-    # 2.1 Analytic linear regression
     def analytic_fit(self, X, y):
+        """
+        Computes the analytic solution for the least squares linear regression problem as in slide 30 of:
+        https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/3-linearregression.pdf
+        """
+
         # w = (A^T.A)^{-1}.A^T.y
         XTX = np.dot(X.transpose(), X)
         XTX_inv = np.linalg.inv(XTX)
@@ -27,8 +33,13 @@ class LinearRegression:
         w = np.dot(XTX_inv_XT, y)
         return w
 
-    def fit(self, X, y, analytic_fit=False, learning_rate=.1, epsilon=1e-4, max_iters=1e5, verbose=True, batch_size=1):
-
+    def fit(self, X, y, analytic_fit=False, optimizer_class=None, **optimizer_kwargs):
+        """
+        Finds the best weights :w: for the linear regression model given :X: and :y:.
+        If :analytic_fit: is true, then the best weights are computed analytically. Otherwise the best weights are
+        approximated via stochastic gradient descent with momentum. The standard gradient descent algorithm is recovered
+        when :batch_size: is equal :X.shape[0]: and :beta: is equal to zero.
+        """
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
@@ -36,9 +47,9 @@ class LinearRegression:
         if analytic_fit:
             self.w = self.analytic_fit(A, y)
         else:
+            assert optimizer_class is not None
             self.w = np.zeros((A.shape[1], y.shape[1]))
-            optimizer = StochasticGradientDescent(learning_rate=learning_rate, epsilon=epsilon, max_iters=max_iters,
-                                                  verbose=verbose, batch_size=batch_size)
+            optimizer = optimizer_class(**optimizer_kwargs)
             self.w = optimizer.run(self.gradient, A, y, self.w)
 
         return self
@@ -83,15 +94,14 @@ class LogisticRegression:
         gradient = np.dot(X.transpose(), y_hat - y) / y.shape[0]
         return gradient
 
-    def fit(self, X, y, learning_rate=.1, epsilon=1e-4, max_iters=1e5, batch_size=1, verbose=True):
+    def fit(self, X, y, optimizer_class, **optimizer_kwargs):
 
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
 
         self.w = np.zeros((A.shape[1], y.shape[1]))
-        optimizer = Adam(learning_rate=learning_rate, epsilon=epsilon, max_iters=max_iters,
-                                              verbose=verbose, batch_size=batch_size, beta_1=0.9, beta_2=0.9)
+        optimizer = optimizer_class(**optimizer_kwargs)
         self.w = optimizer.run(self.gradient, A, y, self.w)
 
         return self

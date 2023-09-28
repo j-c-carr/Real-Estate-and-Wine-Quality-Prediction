@@ -4,10 +4,12 @@ class StochasticGradientDescent:
     """
     Stochastic gradient descent with momentum. Reduces to standard gradient descent when :batch_size: is equal to the
     number of samples in the training set. The parameter :beta: controls the momentum. When :beta: is equal to zero,
-    the optimizer runs normal stochastic gradient descent.
+    the optimizer runs normal stochastic gradient descent. The StochasticGradientDescent class was modified from the 
+    GradientDescent class defined in the gradient descent tutorial:
+    https://github.com/rabbanyk/comp551-notebooks/blob/master/GradientDescent.ipynb
     """
 
-    def __init__(self, learning_rate=.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True,
+    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True,
                  beta=0):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
@@ -50,12 +52,12 @@ class StochasticGradientDescent:
 
 class Adam:
     """
-    Implements the Adam gradient descent technique according to the weight update in slide 35 of:
+    Implements the Adam gradient descent method according to the weight update in slide 35 of:
     https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
     """
 
-    def __init__(self, learning_rate=.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True,
-                 beta_1=0, beta_2=0):
+    def __init__(self, learning_rate=0.1, max_iters=1e5, epsilon=1e-8, batch_size=1, record_history=False, verbose=True,
+                 beta_1=0.9, beta_2=0.9):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
         self.record_history = record_history

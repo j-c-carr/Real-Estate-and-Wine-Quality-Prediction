@@ -17,8 +17,11 @@ class StochasticGradientDescent:
         self.verbose = verbose
         self.batch_size = batch_size
         self.beta = beta    # momentum
-        self.w_history = []  # to store the weight history for visualization
         self.record_history = record_history
+        if self.record_history:     # to store the weight history for visualization
+            self.w_history = []
+        else:
+            self.w_history = None
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
@@ -33,7 +36,7 @@ class StochasticGradientDescent:
             # https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
             batch = np.random.choice(ix_list, size=self.batch_size, replace=False)
 
-            grad = gradient_fn(X[batch], y[batch], w)
+            grad = gradient_fn(X, y, w)
 
             delta_w = self.beta * prev_delta_w + (1-self.beta) * grad
             prev_delta_w = delta_w
@@ -46,7 +49,7 @@ class StochasticGradientDescent:
             if self.record_history:
                 self.w_history.append(w)
             t += 1
-        return w, self.w_history
+        return w
 
 
 class Adam:
@@ -62,10 +65,14 @@ class Adam:
         self.epsilon = epsilon
         self.verbose = verbose
         self.batch_size = batch_size
-        self.w_history = []  # to store the weight history for visualization
-        self.record_history = record_history
         self.beta_1 = beta_1    # used for moving average of the first moment
         self.beta_2 = beta_2    # used for moving average of the second moment
+
+        self.record_history = record_history
+        if self.record_history:     # to store the weight history for visualization
+            self.w_history = []
+        else:
+            self.w_history = None
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
@@ -104,4 +111,4 @@ class Adam:
                 self.w_history.append(w)
 
             t += 1
-        return w, self.w_history
+        return w

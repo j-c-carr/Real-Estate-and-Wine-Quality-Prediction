@@ -1,4 +1,5 @@
 import numpy as np
+
 import pandas as pd
 
 from data_acquisition.data_acquisition import  fetch_housing_dataset, fetch_wine_dataset
@@ -6,6 +7,7 @@ from models.models import LinearRegression, LogisticRegression
 from models.optimizers import Adam, StochasticGradientDescent
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+
 np.random.seed(0)
 
 housing_df = fetch_housing_dataset(preprocess=True)

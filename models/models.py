@@ -1,6 +1,7 @@
 import numpy as np
 
 class LinearRegression:
+    """Implement linear regression using the sum of least squares cost function"""
     def __init__(self, add_bias=True):
         self.add_bias = add_bias    # add an extra bias weight
         self.w = None
@@ -48,11 +49,11 @@ class LinearRegression:
             self.w = self.analytic_fit(A, y)
         else:
             assert optimizer_class is not None
-            self.w = np.zeros((A.shape[1], y.shape[1]))
+            self.w = np.zeros((A.shape[1], 1))
             optimizer = optimizer_class(**optimizer_kwargs)
-            self.w, w_history = optimizer.run(self.gradient, A, y, self.w)
+            self.w = optimizer.run(self.gradient, A, y, self.w)
 
-        return w_history
+        return optimizer.w_history
 
     def predict(self, X):
         assert self.w is not None
@@ -71,7 +72,7 @@ def softmax(X):
 
 
 class LogisticRegression:
-
+    """Implements logistic regression for multi-class classification with the cross entropy loss function."""
     def __init__(self, add_bias=True):
         self.add_bias = add_bias
 
@@ -102,9 +103,9 @@ class LogisticRegression:
 
         self.w = np.zeros((A.shape[1], y.shape[1]))
         optimizer = optimizer_class(**optimizer_kwargs)
-        self.w, w_history = optimizer.run(self.gradient, A, y, self.w)
+        self.w = optimizer.run(self.gradient, A, y, self.w)
 
-        return w_history
+        return optimizer.w_history
 
     def predict(self, X):
         A = np.copy(X)

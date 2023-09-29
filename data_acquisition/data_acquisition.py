@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
-
+from scipy.stats import zscore
+from sklearn.preprocessing import MinMaxScaler
 
 HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'ZN': 'proportion of residential land zoned for lots over 25,000 sq.ft.',
@@ -25,8 +26,21 @@ def fetch_housing_dataset(preprocess=True):
 
     if preprocess:
         boston_housing_df.dropna(inplace=True)
+        boston_housing_df = remove_outliers(boston_housing_df)
+        boston_housing_df = min_max_scale(boston_housing_df)
 
     return boston_housing_df
+
+
+def remove_outliers(df, z_max=3):
+    """Remove rows that are outliers according to z score"""
+    return df[(np.abs(zscore(df)) <= z_max).all(axis=1)]
+
+def min_max_scale(df):
+    scaler = MinMaxScaler()
+    columns = list(df.columns)
+    df = scaler.fit_transform(df.to_numpy())
+    return pd.DataFrame(df, columns=columns)
 
 
 # fetch wine dataset

@@ -18,14 +18,14 @@ class StochasticGradientDescent:
         self.batch_size = batch_size
         self.beta = beta    # momentum
         self.record_history = record_history
-        if self.record_history:     # to store the weight history for visualization
-            self.w_history = []
-        else:
-            self.w_history = None
+        self.w_history = None
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
         ix_list = [i for i in range(X.shape[0])]    # possible indices for each mini batch
+
+        if self.record_history:
+            self.w_history = np.empty((int(self.max_iters), *w.shape))
 
         grad = np.inf
         prev_delta_w = np.zeros(w.shape)
@@ -47,7 +47,7 @@ class StochasticGradientDescent:
                 print(f'gradient norm at step {t}: {np.linalg.norm(grad)}')
 
             if self.record_history:
-                self.w_history.append(w)
+                self.w_history[t] = w
             t += 1
         return w
 
@@ -69,14 +69,14 @@ class Adam:
         self.beta_2 = beta_2    # used for moving average of the second moment
 
         self.record_history = record_history
-        if self.record_history:     # to store the weight history for visualization
-            self.w_history = []
-        else:
-            self.w_history = None
+        self.w_history = None
 
     def run(self, gradient_fn, X, y, w):
         assert self.batch_size <= X.shape[0], f'Error, batch size must be smaller than {X.shape[0]}'
         ix_list = [i for i in range(X.shape[0])]    # possible indices for each mini batch
+
+        if self.record_history:
+            self.w_history = np.empty((int(self.max_iters), *w.shape))
 
         grad = np.inf
         prev_M = np.zeros(w.shape)
@@ -108,7 +108,7 @@ class Adam:
                 print(f'gradient norm at step {t}: {np.linalg.norm(grad)}')
 
             if self.record_history:
-                self.w_history.append(w)
+                self.w_history[t] = w
 
             t += 1
         return w

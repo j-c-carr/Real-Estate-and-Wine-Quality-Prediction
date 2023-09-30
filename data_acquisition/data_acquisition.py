@@ -21,23 +21,25 @@ HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
 # fetch boston housing dataset
 def fetch_housing_dataset(preprocess=True):
 
-    boston_housing_df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
+    df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
         ['B'], axis=1)
 
     if preprocess:
-        boston_housing_df.dropna(inplace=True)
-        boston_housing_df = remove_outliers(boston_housing_df)
-        boston_housing_df = min_max_scale(boston_housing_df)
+        df.dropna(inplace=True)
+        # Remove CHAS, ZN and CRIM features
+        df.drop(columns=['CHAS', 'ZN'], inplace=True)
+        df = remove_outliers(df)
+        df = min_max_scale(df)
 
-    return boston_housing_df
+    return df
 
 
 def remove_outliers(df, z_max=3):
     """Remove rows that are outliers according to z score"""
     return df[(np.abs(zscore(df)) <= z_max).all(axis=1)]
 
-def min_max_scale(df):
-    scaler = MinMaxScaler()
+def min_max_scale(df, feature_range=(0,1)):
+    scaler = MinMaxScaler(feature_range=feature_range)
     columns = list(df.columns)
     df = scaler.fit_transform(df.to_numpy())
     return pd.DataFrame(df, columns=columns)

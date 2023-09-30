@@ -1,5 +1,45 @@
 import numpy as np
 
+class GradientDescent:
+    """
+    Implements gradient descent algorithm. The GradientDescent class defined in the gradient descent tutorial:
+    https://github.com/rabbanyk/comp551-notebooks/blob/master/GradientDescent.ipynb
+    """
+
+    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True):
+        self.learning_rate = learning_rate
+        self.max_iters = max_iters
+        self.epsilon = epsilon
+        self.verbose = verbose
+        self.batch_size = batch_size
+        self.record_history = record_history
+        self.w_history = None
+
+    def run(self, gradient_fn, X, y, w):
+
+        if self.record_history:
+            self.w_history = np.empty((int(self.max_iters), *w.shape))
+
+        grad = np.inf
+        t = 0
+        while np.linalg.norm(grad) > self.epsilon and t < self.max_iters:
+
+            # update weights according to the equation in slide 19 of:
+            # https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
+
+            grad = gradient_fn(X, y, w)
+
+            w = w - self.learning_rate * grad
+
+            if self.verbose and (t % 100 == 0):
+                print(f'gradient norm at step {t}: {np.linalg.norm(grad)}')
+
+            if self.record_history:
+                self.w_history[t] = w
+            t += 1
+        return w
+
+
 class StochasticGradientDescent:
     """
     Stochastic gradient descent with momentum. Reduces to standard gradient descent when :batch_size: is equal to the

@@ -47,26 +47,22 @@ class LinearRegression:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
 
         if analytic_fit:
-            self.w_analytic = self.analytic_fit(A, y)
-            return self.w_analytic
-        else:
-            assert optimizer_class is not None
+            self.w = self.analytic_fit(A, y)
+            return self.w
 
-            self.w = np.zeros((A.shape[1], 1))
-            optimizer = optimizer_class(**optimizer_kwargs)
-            self.w = optimizer.run(self.gradient, A, y, self.w)
+        assert optimizer_class is not None
 
-            return optimizer.w_history
+        self.w = np.zeros((A.shape[1], 1))
+        optimizer = optimizer_class(**optimizer_kwargs)
+        self.w = optimizer.run(self.gradient, A, y, self.w)
 
-    def predict(self, X, analytic_fit=False):
+        return optimizer.w_history
+
+    def predict(self, X):
         assert self.w is not None
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
-
-        if analytic_fit:
-            assert self.w_analytic is not None
-            return np.dot(A, self.w_analytic)
 
         return np.dot(A, self.w)
 

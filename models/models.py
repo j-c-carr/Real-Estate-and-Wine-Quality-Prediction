@@ -5,6 +5,7 @@ class LinearRegression:
     def __init__(self, add_bias=True):
         self.add_bias = add_bias    # add an extra bias weight
         self.w = None
+        self.w_analytic = None
 
     def cost_fn(self, X, y, w):
         """Computes the sum of square loss as defined in slide 15 of:
@@ -46,20 +47,26 @@ class LinearRegression:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
 
         if analytic_fit:
-            self.w = self.analytic_fit(A, y)
+            self.w_analytic = self.analytic_fit(A, y)
+            return self.w_analytic
         else:
             assert optimizer_class is not None
+
             self.w = np.zeros((A.shape[1], 1))
             optimizer = optimizer_class(**optimizer_kwargs)
             self.w = optimizer.run(self.gradient, A, y, self.w)
 
-        return optimizer.w_history
+            return optimizer.w_history
 
-    def predict(self, X):
+    def predict(self, X, analytic_fit=False):
         assert self.w is not None
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
+
+        if analytic_fit:
+            assert self.w_analytic is not None
+            return np.dot(A, self.w_analytic)
 
         return np.dot(A, self.w)
 

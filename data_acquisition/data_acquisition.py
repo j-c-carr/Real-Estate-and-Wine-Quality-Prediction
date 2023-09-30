@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
-
+from scipy.stats import zscore
+from sklearn.preprocessing import MinMaxScaler
 
 HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'ZN': 'proportion of residential land zoned for lots over 25,000 sq.ft.',
@@ -20,13 +21,28 @@ HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
 # fetch boston housing dataset
 def fetch_housing_dataset(preprocess=True):
 
-    boston_housing_df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
+    df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
         ['B'], axis=1)
 
     if preprocess:
-        boston_housing_df.dropna(inplace=True)
+        df.dropna(inplace=True)
+        # Remove CHAS and ZN features
+        df.drop(columns=['CHAS', 'ZN'], inplace=True)
+        df = remove_outliers(df)
+        df = min_max_scale(df)
 
-    return boston_housing_df
+    return df
+
+
+def remove_outliers(df, z_max=3):
+    """Remove rows that are outliers according to z score"""
+    return df[(np.abs(zscore(df)) <= z_max).all(axis=1)]
+
+def min_max_scale(df, feature_range=(0,1)):
+    scaler = MinMaxScaler(feature_range=feature_range)
+    columns = list(df.columns)
+    df = scaler.fit_transform(df.to_numpy())
+    return pd.DataFrame(df, columns=columns)
 
 
 # fetch wine dataset
@@ -38,15 +54,3 @@ def fetch_wine_dataset(preprocess=True):
         wine_df.dropna(inplace=True)
 
     return wine_df
-
-
-def housing_tt_split(df, test_size=0.25):
-    # train test split for housing df
-
-    df['train'] = np.random.binomial(1, 1 - test_size, size=(df.shape[0], 1)).astype(bool)
-
-    X_train = df[df.train == True].drop(['MEDV', 'train'], axis=1).to_numpy()
-    X_test = df[df.train == False].drop(['MEDV', 'train'], axis=1).to_numpy()
-    y_train = df[df.train == True].MEDV.to_numpy().reshape(-1, 1)
-    y_test = df[df.train == False].MEDV.to_numpy().reshape(-1, 1)
-    return X_train, X_test, y_train, y_test

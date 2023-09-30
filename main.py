@@ -7,12 +7,7 @@ from models.models import LinearRegression, LogisticRegression
 from models.optimizers import Adam, StochasticGradientDescent
 from utils.metrics import mse
 from sklearn.model_selection import train_test_split
-<<<<<<< Updated upstream
-from sklearn.metrics import accuracy_score
-
-=======
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
->>>>>>> Stashed changes
 np.random.seed(0)
 
 housing_df = fetch_housing_dataset(preprocess=True)

@@ -26,7 +26,7 @@ def fetch_housing_dataset(preprocess=True):
 
     if preprocess:
         df.dropna(inplace=True)
-        # Remove CHAS, ZN and CRIM features
+        # Remove CHAS and ZN features
         df.drop(columns=['CHAS', 'ZN'], inplace=True)
         df = remove_outliers(df)
         df = min_max_scale(df)

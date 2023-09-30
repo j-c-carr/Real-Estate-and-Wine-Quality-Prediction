@@ -77,6 +77,15 @@ def softmax(X):
     return np.exp(X - np.max(X, axis=1, keepdims=True)) / (np.sum(np.exp(X-np.max(X, axis=1, keepdims=True)), axis=1,
                                                                   keepdims=True) + eps)
 
+def one_hot(y):
+    """one-hot encodes probabilistic predictions"""
+    y_one_hot = np.zeros(y.shape)
+    pred_labels = y.argmax(axis=1)
+    for i in range(y.shape[0]):
+        y_one_hot[i, pred_labels[i]] = 1
+    return y_one_hot
+
+
 
 class LogisticRegression:
     """Implements logistic regression for multi-class classification with the cross entropy loss function."""
@@ -118,7 +127,6 @@ class LogisticRegression:
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
-
-        y_preds = softmax(np.dot(A, self.w))
+        y_preds = one_hot(softmax(np.dot(A, self.w)))
 
         return y_preds

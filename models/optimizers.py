@@ -36,7 +36,7 @@ class StochasticGradientDescent:
             # https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
             batch = np.random.choice(ix_list, size=self.batch_size, replace=False)
 
-            grad = gradient_fn(X, y, w)
+            grad = gradient_fn(X[batch], y[batch], w)
 
             delta_w = self.beta * prev_delta_w + (1-self.beta) * grad
             prev_delta_w = delta_w

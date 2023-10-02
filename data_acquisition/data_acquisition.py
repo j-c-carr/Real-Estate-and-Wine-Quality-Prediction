@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
 from scipy.stats import zscore
-from sklearn.preprocessing import MinMaxScaler
 
 HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'ZN': 'proportion of residential land zoned for lots over 25,000 sq.ft.',
@@ -38,10 +37,11 @@ def remove_outliers(df, z_max=3):
 
 
 def min_max_scale(df, feature_range=(0,1)):
-    scaler = MinMaxScaler(feature_range=feature_range)
-    columns = list(df.columns)
-    df = scaler.fit_transform(df.to_numpy())
-    return pd.DataFrame(df, columns=columns)
+    scale_min, scale_max = feature_range
+    df_scaled = (df - df.min()) / (df.max() - df.min())
+    scaled_df = df_scaled * (scale_max - scale_min) + scale_min
+    
+    return pd.DataFrame(scaled_df, columns=df.columns)
 
 
 # fetch wine dataset

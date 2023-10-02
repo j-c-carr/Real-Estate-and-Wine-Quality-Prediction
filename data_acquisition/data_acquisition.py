@@ -18,6 +18,7 @@ HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'LSTAT': '% lower status of the population',
              'MEDV': "Median value of owner-occupied homes in $1000's"}
 
+
 # fetch boston housing dataset
 def fetch_housing_dataset(preprocess=True):
 
@@ -26,9 +27,6 @@ def fetch_housing_dataset(preprocess=True):
 
     if preprocess:
         df.dropna(inplace=True)
-        # Remove CHAS and ZN features
-        df.drop(columns=['CHAS', 'ZN'], inplace=True)
-        df = remove_outliers(df)
         df = min_max_scale(df)
 
     return df
@@ -37,6 +35,7 @@ def fetch_housing_dataset(preprocess=True):
 def remove_outliers(df, z_max=3):
     """Remove rows that are outliers according to z score"""
     return df[(np.abs(zscore(df)) <= z_max).all(axis=1)]
+
 
 def min_max_scale(df, feature_range=(0,1)):
     scaler = MinMaxScaler(feature_range=feature_range)

@@ -5,7 +5,6 @@ class LinearRegression:
     def __init__(self, add_bias=True):
         self.add_bias = add_bias    # add an extra bias weight
         self.w = None
-        self.w_analytic = None
 
     def cost_fn(self, X, y, w):
         """Computes the sum of square loss as defined in slide 15 of:
@@ -39,8 +38,7 @@ class LinearRegression:
         """
         Finds the best weights :w: for the linear regression model given :X: and :y:.
         If :analytic_fit: is true, then the best weights are computed analytically. Otherwise the best weights are
-        approximated via stochastic gradient descent with momentum. The standard gradient descent algorithm is recovered
-        when :batch_size: is equal :X.shape[0]: and :beta: is equal to zero.
+        approximated using the optimization method specified by :optimizer_class:.
         """
         A = np.copy(X)
         if self.add_bias:
@@ -73,6 +71,7 @@ def softmax(X):
     return np.exp(X - np.max(X, axis=1, keepdims=True)) / (np.sum(np.exp(X-np.max(X, axis=1, keepdims=True)), axis=1,
                                                                   keepdims=True) + eps)
 
+
 def one_hot(y):
     """one-hot encodes probabilistic predictions"""
     y_one_hot = np.zeros(y.shape)
@@ -80,7 +79,6 @@ def one_hot(y):
     for i in range(y.shape[0]):
         y_one_hot[i, pred_labels[i]] = 1
     return y_one_hot
-
 
 
 class LogisticRegression:

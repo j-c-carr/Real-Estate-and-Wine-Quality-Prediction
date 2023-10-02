@@ -6,7 +6,7 @@ from data_acquisition.data_acquisition import  fetch_housing_dataset, fetch_wine
 from models.models import LinearRegression, LogisticRegression
 from models.optimizers import GradientDescent, StochasticGradientDescent, Adam
 from utils.metrics import mse
-from sklearn.model_selection import train_test_split
+from utils.data_preparation import custom_train_test_split
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 np.random.seed(0)
 
@@ -15,7 +15,7 @@ np.random.seed(0)
 # 2.2 Logistic regression with SGD. Achieves about 91% accuracy on test set with default parameters.
 wine_df = fetch_wine_dataset()
 one_hot_wine_classes = pd.get_dummies(wine_df['class']).to_numpy(dtype=int)
-X_wine_train, X_wine_test, y_wine_train, y_wine_test = train_test_split(wine_df.drop(['class'], axis=1),
+X_wine_train, X_wine_test, y_wine_train, y_wine_test = custom_train_test_split(wine_df.drop(['class'], axis=1).to_numpy(),
                                                                         one_hot_wine_classes,
                                                                         test_size=0.20, stratify=wine_df['class'])
 
@@ -41,20 +41,20 @@ print(f'Precision\n\tGD: {gd_precision}, SGD with mini-batch of size {batch_size
 print(f'Recall\n\tGD: {gd_recall}, SGD with mini-batch of size {batch_size}: {sgd_recall}')
 print(f'F1 score\n\tGD: {gd_f1_score}, SGD with mini-batch of size {batch_size}: {sgd_f1_score}')
 
-exit()
+# exit()
 # 2.3 Linear regression with gradient descent
 housing_df = fetch_housing_dataset(preprocess=True)
-X_housing_train, X_housing_test, y_housing_train, y_housing_test = train_test_split(housing_df.drop(['MEDV'], axis=1).to_numpy(),
+X_housing_train, X_housing_test, y_housing_train, y_housing_test = custom_train_test_split(housing_df.drop(['MEDV'], axis=1).to_numpy(),
                                                                                     housing_df.MEDV.to_numpy().reshape(-1,1), test_size=0.20)
 lin_reg = LinearRegression(add_bias=True)
 w_star = lin_reg.fit(X_housing_train, y_housing_train, analytic_fit=True)
 lin_reg.fit(X_housing_train, y_housing_train, optimizer_class=StochasticGradientDescent, batch_size=X_housing_train.shape[0], record_history=True, beta=0)
 print('l2 norm between w and w_star: ', np.linalg.norm(w_star - lin_reg.w))
 y_preds_with_grad = lin_reg.predict(X_housing_test)
-y_preds_with_analytic_fit = lin_reg.predict(X_housing_test, analytic_fit=True)
+y_preds_with_analytic_fit = lin_reg.predict(X_housing_test)
 
 ms_error = mse(y_housing_test, y_preds_with_grad)
-min_ms_error = mse(y_housing_test, lin_reg.predict(X_housing_test, analytic_fit=True))
+min_ms_error = mse(y_housing_test, lin_reg.predict(X_housing_test))
 
 print('ms_error from gradient descent: ', ms_error)
 print('smallest possible ms error: ', min_ms_error)

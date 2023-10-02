@@ -74,7 +74,7 @@ class StochasticGradientDescent:
 
             # update weights according to the equation in slide 30 of:
             # https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
-            batch = np.random.choice(ix_list, size=self.batch_size, replace=False)
+            batch = np.random.choice(ix_list, size=self.batch_size, replace=True)
 
             grad = gradient_fn(X[batch], y[batch], w)
 

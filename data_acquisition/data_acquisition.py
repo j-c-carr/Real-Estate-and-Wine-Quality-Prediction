@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
-from scipy.stats import zscore
 
 HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'ZN': 'proportion of residential land zoned for lots over 25,000 sq.ft.',
@@ -33,7 +32,8 @@ def fetch_housing_dataset(preprocess=True):
 
 def remove_outliers(df, z_max=3):
     """Remove rows that are outliers according to z score"""
-    return df[(np.abs(zscore(df)) <= z_max).all(axis=1)]
+    z_scores = (df - df.mean()) / df.std()
+    return df[(np.abs(z_scores) <= z_max).all(axis=1)]
 
 
 def min_max_scale(df, feature_range=(0,1)):

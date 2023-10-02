@@ -18,38 +18,23 @@ HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
 
 
 # fetch boston housing dataset
-def fetch_housing_dataset(preprocess=True):
+def fetch_housing_dataset():
 
     df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
         ['B'], axis=1)
-
-    if preprocess:
-        df.dropna(inplace=True)
-        df = min_max_scale(df)
-
+    
+    # rmv rows with null values
+    df.dropna(inplace=True)
+    
     return df
 
 
-def remove_outliers(df, z_max=3):
-    """Remove rows that are outliers according to z score"""
-    z_scores = (df - df.mean()) / df.std()
-    return df[(np.abs(z_scores) <= z_max).all(axis=1)]
-
-
-def min_max_scale(df, feature_range=(0,1)):
-    scale_min, scale_max = feature_range
-    df_scaled = (df - df.min()) / (df.max() - df.min())
-    scaled_df = df_scaled * (scale_max - scale_min) + scale_min
-    
-    return pd.DataFrame(scaled_df, columns=df.columns)
-
-
 # fetch wine dataset
-def fetch_wine_dataset(preprocess=True):
+def fetch_wine_dataset():
     wine = fetch_ucirepo(id=109)
-    wine_df = pd.concat([wine.data.features, wine.data.targets], axis=1)
+    df = pd.concat([wine.data.features, wine.data.targets], axis=1)
 
-    if preprocess:
-        wine_df.dropna(inplace=True)
+    # rmv null rows
+    df.dropna(inplace=True)
 
-    return wine_df
+    return df

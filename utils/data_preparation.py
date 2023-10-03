@@ -20,3 +20,16 @@ def min_max_scale(train_data, test_data, feature_range=(0,1)):
     test_data_scaled = scale_min + (test_data - min_train) * (scale_max - scale_min) / (max_train - min_train)   # use min & max from training data
     
     return train_data_scaled, test_data_scaled
+
+
+def k_fold_split(X, y, n_splits=5):
+    """Split data into k folds for cross-validation"""
+    fold_sizes = (len(y) // n_splits) * np.ones(n_splits, dtype=int)
+    fold_sizes[:len(y) % n_splits] += 1
+    current_idx = 0
+    for fold_size in fold_sizes:
+        start_idx, stop_idx = current_idx, current_idx + fold_size
+        train_idc = list(range(0, start_idx)) + list(range(stop_idx, len(y)))
+        test_idc = list(range(start_idx, stop_idx))
+        yield X[train_idc], y[train_idc], X[test_idc], y[test_idc]
+        current_idx = stop_idx

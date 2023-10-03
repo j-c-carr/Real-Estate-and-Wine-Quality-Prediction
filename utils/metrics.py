@@ -5,7 +5,6 @@ def mse(y_true, y_preds):
     """Computes the mean squared error"""
     return np.mean((y_true - y_preds)**2)
 
-
 def accuracy_score(y_true, y_preds):
     """Computes accuracy of true an predicted labels. Assumes :y_true: and :y_pred: are one-hot encoded vectors."""
     y_true_classes = np.argmax(y_true, axis=1, keepdims=True)

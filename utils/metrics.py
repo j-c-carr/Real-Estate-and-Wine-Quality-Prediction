@@ -5,39 +5,69 @@ def mse(y_true, y_preds):
     """Computes the mean squared error"""
     return np.mean((y_true - y_preds)**2)
 
-def class_metrics(y_true, y_preds, class_avg=False):
-    """NOTE: INCOMPLETE
-    Computes the mean squared error for each class. Assumes that y_true is one-hot encoded vector."""
+def accuracy_score(y_true, y_preds):
+    """Computes accuracy of true an predicted labels. Assumes :y_true: and :y_pred: are one-hot encoded vectors."""
+    y_true_classes = np.argmax(y_true, axis=1, keepdims=True)
+    y_pred_classes = np.argmax(y_preds, axis=1, keepdims=True)
 
-    y_bin_pred = (y_preds >= y_preds.max(axis=1, keepdims=True)).astype(int)
-    tp = np.zeros(y_true.shape[1])
-    fp = np.zeros(y_true.shape[1])
-    tn = np.zeros(y_true.shape[1])
-    fn = np.zeros(y_true.shape[1])
+    accuracy_score = np.sum(y_true_classes == y_pred_classes) / y_true_classes.shape[0]
+    return accuracy_score
 
-    # Calculate the tp, fp, tn, fn for each class
-    # src: https://stackoverflow.com/questions/68157408/using-numpy-to-test-for-false-positives-and-false-negatives
-    positive = 1
-    negative = 0
-    for i in range(y_true.shape[1]):
-        tp[i] = np.sum(np.logical_and(y_bin_pred[:, i] == positive, y_true[:, i] == positive))
-        tn[i] = np.sum(np.logical_and(y_bin_pred[:, i] == negative, y_true[:, i] == negative))
-        fp[i] = np.sum(np.logical_and(y_bin_pred[:, i] == positive, y_true[:, i] == negative))
-        fn[i] = np.sum(np.logical_and(y_bin_pred[:, i] == negative, y_true[:, i] == positive))
 
-    accuracy = (tp + tn) / (tp + tn + fp + fn)
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
+def precision_score(y_true, y_preds):
+    """Computes the average precision for each class, weighted by the number of samples in each class"""
+    y_true_classes = np.argmax(y_true, axis=1, keepdims=True)
+    y_pred_classes = np.argmax(y_preds, axis=1, keepdims=True)
+
+    n_samples = y_true.shape[0]
+    n_classes = np.unique(y_true_classes).shape[0]
+
+    w = np.array([np.sum(y_true_classes == i) / n_samples for i in range(n_classes)]).reshape(-1, 1)
+    precision = np.zeros((n_classes, 1))
+    for i in range(n_classes):
+       tp = np.sum(np.logical_and(y_pred_classes == i, y_pred_classes == y_true_classes))
+       fp = np.sum(np.logical_and(y_pred_classes == i, y_pred_classes != y_true_classes))
+       precision[i] = tp / (tp + fp)
+
+    return np.sum(w * precision)
+
+
+def recall_score(y_true, y_preds):
+    """Computes the average recall for each class, weighted by the number of samples in each class"""
+    y_true_classes = np.argmax(y_true, axis=1, keepdims=True)
+    y_pred_classes = np.argmax(y_preds, axis=1, keepdims=True)
+
+    n_samples = y_true.shape[0]
+    n_classes = np.unique(y_true_classes).shape[0]
+
+    w = np.array([np.sum(y_true_classes == i) / n_samples for i in range(n_classes)]).reshape(-1, 1)
+    recall = np.zeros((n_classes, 1))
+    for i in range(n_classes):
+        tp = np.sum(np.logical_and(y_pred_classes == i, y_pred_classes == y_true_classes))
+        fn = np.sum(np.logical_and(y_pred_classes != i, y_true_classes == i))
+        recall[i] = tp / (tp + fn)
+
+    return np.sum(w * recall)
+
+
+def f1_score(y_true, y_preds):
+    """Computes the average recall for each class, weighted by the number of samples in each class"""
+    y_true_classes = np.argmax(y_true, axis=1, keepdims=True)
+    y_pred_classes = np.argmax(y_preds, axis=1, keepdims=True)
+
+    n_samples = y_true.shape[0]
+    n_classes = np.unique(y_true_classes).shape[0]
+
+    w = np.array([np.sum(y_true_classes == i) / n_samples for i in range(n_classes)]).reshape(-1, 1)
+    precision = np.zeros((n_classes, 1))
+    recall = np.zeros((n_classes, 1))
+    for i in range(n_classes):
+        tp = np.sum(np.logical_and(y_pred_classes == i, y_pred_classes == y_true_classes))
+        fp = np.sum(np.logical_and(y_pred_classes == i, y_pred_classes != y_true_classes))
+        fn = np.sum(np.logical_and(y_pred_classes != i, y_true_classes == i))
+        precision[i] = tp / (tp + fp)
+        recall[i] = tp / (tp + fn)
+
     f1_score = 2 * (precision * recall) / (precision + recall)
 
-    # compute the average accuracy, precision, recall and f1 score
-    if class_avg:
-        # get the fraction of samples for each class
-        w = np.array([np.sum(y_true[:, i]) / y_true.shape[0] for i in range(3)])
-        avg_accuracy = np.sum(accuracy * w)
-        avg_precision = np.sum(precision* w)
-        avg_recall = np.sum(recall * w)
-        avg_f1 = np.sum(f1_score* w)
-        return avg_accuracy, avg_precision, avg_recall, avg_f1
-
-    return accuracy, precision, recall, f1_score
+    return np.sum(w * f1_score)

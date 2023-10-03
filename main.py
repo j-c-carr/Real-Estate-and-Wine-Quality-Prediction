@@ -4,10 +4,8 @@ import pandas as pd
 from utils.data_acquisition import  fetch_housing_dataset, fetch_wine_dataset
 from models.models import LinearRegression, LogisticRegression
 from models.optimizers import GradientDescent, StochasticGradientDescent, Adam
-from utils.metrics import mse
-from utils.data_preparation import custom_train_test_split
-from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
-
+from utils.metrics import mse, accuracy_score, precision_score, f1_score, recall_score
+from sklearn.model_selection import train_test_split
 np.random.seed(0)
 
 
@@ -25,16 +23,16 @@ y_preds = log_r.predict(X_wine_test)
 
 batch_size = 8
 gd_accuracy = accuracy_score(y_wine_test, y_preds)
-gd_precision = precision_score(y_wine_test, y_preds, average='weighted')
-gd_recall = recall_score(y_wine_test, y_preds, average='weighted')
-gd_f1_score = f1_score(y_wine_test, y_preds, average='weighted')
+gd_precision = precision_score(y_wine_test, y_preds)
+gd_recall = recall_score(y_wine_test, y_preds)
+gd_f1_score = f1_score(y_wine_test, y_preds)
 log_r.fit(X_wine_train, y_wine_train, optimizer_class=StochasticGradientDescent, max_iters=4e4, learning_rate=0.05, verbose=False, batch_size=batch_size)
 y_preds = log_r.predict(X_wine_test)
 
 sgd_accuracy = accuracy_score(y_wine_test, y_preds)
-sgd_precision = precision_score(y_wine_test, y_preds, average='weighted')
-sgd_recall = recall_score(y_wine_test, y_preds, average='weighted')
-sgd_f1_score = f1_score(y_wine_test, y_preds, average='weighted')
+sgd_precision = precision_score(y_wine_test, y_preds)
+sgd_recall = recall_score(y_wine_test, y_preds)
+sgd_f1_score = f1_score(y_wine_test, y_preds)
 
 print(f'Accuracy\n\tGD: {gd_accuracy}, SGD with mini-batch of size {batch_size}: {sgd_accuracy}')
 print(f'Precision\n\tGD: {gd_precision}, SGD with mini-batch of size {batch_size}: {sgd_precision}')

@@ -6,12 +6,11 @@ class GradientDescent:
     https://github.com/rabbanyk/comp551-notebooks/blob/master/GradientDescent.ipynb
     """
 
-    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True):
+    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, record_history=False, verbose=True):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
         self.epsilon = epsilon
         self.verbose = verbose
-        self.batch_size = batch_size
         self.record_history = record_history
         self.w_history = None
 
@@ -49,7 +48,7 @@ class StochasticGradientDescent:
     https://github.com/rabbanyk/comp551-notebooks/blob/master/GradientDescent.ipynb
     """
 
-    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True,
+    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=False,
                  beta=0):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
@@ -74,7 +73,7 @@ class StochasticGradientDescent:
 
             # update weights according to the equation in slide 30 of:
             # https://www.cs.mcgill.ca/~isabeau/COMP551/F23/slides/5-gradientdescent.pdf
-            batch = np.random.choice(ix_list, size=self.batch_size, replace=False)
+            batch = np.random.choice(ix_list, size=self.batch_size, replace=True)
 
             grad = gradient_fn(X[batch], y[batch], w)
 

@@ -8,8 +8,6 @@ from utils.metrics import mse, accuracy_score, precision_score, f1_score, recall
 from sklearn.model_selection import train_test_split
 np.random.seed(0)
 
-np.random.seed(0)
-
 
 # 2.2 Logistic regression with SGD. Achieves about 91% accuracy on test set with default parameters.
 wine_df = fetch_wine_dataset()

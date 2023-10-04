@@ -6,12 +6,11 @@ class GradientDescent:
     https://github.com/rabbanyk/comp551-notebooks/blob/master/GradientDescent.ipynb
     """
 
-    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, batch_size=1, record_history=False, verbose=True):
+    def __init__(self, learning_rate=0.1, max_iters=1e4, epsilon=1e-8, record_history=False, verbose=True):
         self.learning_rate = learning_rate
         self.max_iters = max_iters
         self.epsilon = epsilon
         self.verbose = verbose
-        self.batch_size = batch_size
         self.record_history = record_history
         self.w_history = None
 

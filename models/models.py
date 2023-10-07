@@ -61,11 +61,12 @@ class LinearRegression:
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
-        
+
         if w is not None:
             return np.dot(A, w)
         
         return np.dot(A, self.w)
+
 
 
 def softmax(X):
@@ -124,7 +125,7 @@ class LogisticRegression:
         A = np.copy(X)
         if self.add_bias:
             A = np.concatenate([np.ones((A.shape[0], 1)), A], axis=1)
-            
+        
         if w is not None:
             y_preds = one_hot(softmax(np.dot(A, w)))
         else:

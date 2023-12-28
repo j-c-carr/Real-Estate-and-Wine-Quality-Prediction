@@ -4,7 +4,7 @@
 * Our best linear regression model achieves a Mean Squared Error of 5.396 on the Boston Housing dataset and our best logistic regression model achieves a perfect test accuracy on the Wine dataset.
 * Lastly, we experiment with augmenting the Boston Housing Dataset through Gaussian and Sigmoid transformations.
   
-`writeup.pdf` contains our full report.
+`report.pdf` contains a description of all our experiments and results.
 
 ## Installation
 Before running the project, you need to set up the required environment. Follow these steps:

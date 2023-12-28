@@ -1,6 +1,9 @@
 # Linear and Logistic Regression in Numpy
-**Description:** This project implements three gradient-based optimization methods for linear and logistic regression in `numpy`. Using the Boston Housing and Wine Datasets, we investigate how the performance of these models change with respect to several variables including the training set size, batch size, learning rate and optimization method (GD vs. SGD vs. Adam). Our best linear regression model achieves a Mean Squared Error of 5.396 on the Boston Housing dataset and our best logistic regression model achieves perfect accuracy on the Wine dataset. Lastly, we experiment with augmenting the Boston Housing Dataset through Gaussian and Sigmoid transformations.
-
+**Description:** This project implements three gradient-based optimization methods for linear and logistic regression in `numpy`. 
+* Using the Boston Housing and Wine Datasets, we investigate how the performance of these models change with respect to several variables including the training set size, batch size, learning rate and optimization method (GD vs. SGD vs. Adam).
+* Our best linear regression model achieves a Mean Squared Error of 5.396 on the Boston Housing dataset and our best logistic regression model achieves a perfect test accuracy on the Wine dataset.
+* Lastly, we experiment with augmenting the Boston Housing Dataset through Gaussian and Sigmoid transformations.
+  
 `writeup.pdf` contains our full report.
 
 ## Installation

@@ -1,14 +1,44 @@
-# Assignment 1
+# Linear and Logistic Regression in Numpy
+**Description:** This project implements three gradient-based optimization methods for linear and logistic regression in `numpy`. Using the Boston Housing and Wine Datasets, we investigate how the performance of these models change with respect to several variables including the training set size, batch size, learning rate and optimization method (GD vs. SGD vs. Adam). Our best linear regression model achieves a Mean Squared Error of 5.396 on the Boston Housing dataset and our best logistic regression model achieves perfect accuracy on the Wine dataset. Lastly, we experiment with augmenting the Boston Housing Dataset through Gaussian and Sigmoid transformations.
 
-## Setup
-1. Create a virtual environment and install the packages in `requirements.txt`
+`writeup.pdf` contains our full report.
 
-## Running the code
-1. Open the notebook experiments_test.ipynb where all experiments are implemented in separate sections.
+## Installation
+Before running the project, you need to set up the required environment. Follow these steps:
 
-## Overview of files & folders:
-1. `data/`: Contains the Boston housing and Wine datasets
-2. `data_analysis`: Contains the code that was used to perform data analysis.
-3. `models`: implementations of the linear, logisitc regression and SGD models. We even implemented the Adam model in `models/optimizers.py`
-4. `experiments_test.ipynb`: Contains the code for the experiments that we ran on both datasets
-5. `requirements.txt`: list of dependencies & libraries
+**1. Clone the Repository:**
+```
+git clone https://github.com/j-c-carr/Linear-and-Logistic-Regression.git
+cd Linear-and-Logistic-Regression
+```
+**2. Create a Virtual Environment (Optional but Recommended):**
+```
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+```
+**3. Install Dependencies:**
+```
+pip install -r requirements.txt
+```
+
+## Usage
+To use this project, follow these steps:
+
+**1. Run Jupyter Notebooks:**
+* Launch Jupyter Notebook in the project directory:
+```
+jupyter notebook
+```
+* Open the relevant Jupyter notebooks, such as:
+  - `experiments.ipynb` - contains all of the linear and logistic regression experiments
+  - `data_analysis/boston_analysis.ipynb`
+  - `data_analysis/wine_analysis.ipynb`
+  
+**2. Explore the Code:**
+* Review the codebase:
+  - `models/models.py` - contains the linear and logistic regression models
+  - `models/optimizers.py` - contains the optimizers (SGD and Adam)
+ 
+**3. Customize and Experiment:**
+* Feel free to customize parameters and experiment with the code.
+* Note any additional instructions provided within the notebooks.

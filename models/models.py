@@ -1,3 +1,6 @@
+"""
+Python classes for logistic and linear regression models
+"""
 import numpy as np
 
 class LinearRegression:

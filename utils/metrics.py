@@ -1,3 +1,6 @@
+"""
+Helper functions that implement various performance metrics in numpy
+"""
 import numpy as np
 
 

@@ -1,3 +1,6 @@
+"""
+Python classes for gradient descent, stochastic gradient descent, and Adam optimizers
+"""
 import numpy as np
 
 class GradientDescent:

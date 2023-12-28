@@ -1,3 +1,6 @@
+"""
+Helper functions for aquiring the Boston Housing and Wine Datasets
+"""
 import numpy as np
 import pandas as pd
 from ucimlrepo import fetch_ucirepo
@@ -17,9 +20,9 @@ HOUSING_FEATURE_INFO = {'CRIM': 'per capita crime rate by town',
              'MEDV': "Median value of owner-occupied homes in $1000's"}
 
 
-# fetch boston housing dataset
-def fetch_housing_dataset():
 
+def fetch_housing_dataset():
+    """Fetches boston housing dataset"""
     df = pd.read_csv('https://raw.githubusercontent.com/j-c-carr/boston_dataset/master/boston.csv').drop(
         ['B'], axis=1)
     
@@ -29,8 +32,8 @@ def fetch_housing_dataset():
     return df
 
 
-# fetch wine dataset
 def fetch_wine_dataset():
+    """Fetches wine dataset"""
     wine = fetch_ucirepo(id=109)
     df = pd.concat([wine.data.features, wine.data.targets], axis=1)
 

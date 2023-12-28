@@ -1,3 +1,6 @@
+"""
+Helper functions for preprocessing the Boston Housing and Wine Datasets
+"""
 import pandas as pd
 import numpy as np
 
